@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Twitch Filters</title>
+  </head>
+  <body>
+    <h1>Twitch Filters</h1>
+
+    <div>
+      <h4>Blacklisted</h4>
+      <div>
+        <label>
+          Games (comma-separated list):
+          <input id="hidden-games" type="textbox">
+        </label>
+      </div>
+      <div>
+        <label>
+          Streams (comma-separated list):
+          <input id="hidden-streams" type="textbox">
+        </label>
+      </div>
+    </div>
+
+    <div>
+      <h4>Miscellaneous</h4>
+      <div>
+        <label>
+          Filter delay:
+          <input id="filter-delay" type="textbox">
+        </label>
+      </div>
+    </div>
+
+    <div id="status"></div>
+    <button id="save">Save</button>
+
+    <script src="options.js"></script>
+  </body>
+</html>
