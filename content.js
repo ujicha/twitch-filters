@@ -82,8 +82,8 @@ function FilterStreams() {
       HighlightStream(this);
 
     // Check if blacklisted
-    var isBLStream = $.inArray(userName, hidden_streams);
-    var isBLGame = $.inArray(gameName, hidden_games);
+    var isBLStream = $.inArray(TrimLower(userName), hidden_streams);
+    var isBLGame = $.inArray(TrimLower(gameName), hidden_games);
     if (!isSpecificGamePage && (isBLStream > -1 || isBLGame > -1)) {
       StyleHiddenGame(this);
 
@@ -98,6 +98,13 @@ function FilterStreams() {
 
     $(this).show();
   });
+}
+
+function TrimLower(str) {
+  if (str == null)
+    return str;
+
+  return str.trim().toLowerCase();
 }
 
 function StyleHiddenGame(e) {
@@ -157,10 +164,20 @@ function LoadOptions() {
     hiddenStreams: "",
     followedGames: ""
   }, function(items) {
-    hidden_games = items.hiddenGames.split(",");
-    hidden_streams = items.hiddenStreams.split(",");
+    hidden_games = SplitArrayList(items.hiddenGames);
+    hidden_streams = SplitArrayList(items.hiddenStreams);
     followed_games = items.followedGames;
   });
+}
+
+function SplitArrayList(list) {
+  var items = list.split(",");
+
+  for (var i = 0; i < items.length; i++) {
+    items[i] = TrimLower(items[i]);
+  }
+
+  return items;
 }
 
 function ReadFollowedStreams() {
@@ -171,7 +188,7 @@ function ReadFollowedStreams() {
       followed_streams.push(user);
 
       var game = $(this).find(".js-search-game")[0].innerText;
-      if ($.inArray(game, hidden_games) > -1)
+      if ($.inArray(TrimLower(game), hidden_games) > -1)
         DimFollowedOnline(this);
       else if ($.inArray(game, followed_games) > -1)
         HighlightFollowedOnline(this);
