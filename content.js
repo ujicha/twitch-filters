@@ -180,14 +180,30 @@ function SplitArrayList(list) {
   return items;
 }
 
+function GetUser(el) {
+  var user = $(el).find(".js-search-name")[0];
+  if (user == null)
+    return "";
+
+  return user.innerText;
+}
+
+function GetGame(el) {
+  var game = $(el).find(".js-search-game")[0];
+  if (game == null)
+    return "";
+
+    return game.innerText;
+}
+
 function ReadFollowedStreams() {
   followed_streams = [];
   $(".following-list .channel").each(function () {
     try {
-      var user = $(this).find(".js-search-name")[0].innerText;
+      var user = GetUser(this);
       followed_streams.push(user);
 
-      var game = $(this).find(".js-search-game")[0].innerText;
+      var game = GetGame(this);
       if ($.inArray(TrimLower(game), hidden_games) > -1)
         DimFollowedOnline(this);
       else if ($.inArray(game, followed_games) > -1)
