@@ -38,6 +38,7 @@ chrome.runtime.onMessage.addListener(
     if( request.message === "filter_streams" ) {
       LoadOptions();
       FilterStreams();
+      ShowFullGameNameOnFollowed();
     }
     else if (request.message === "console_log") {
       console.log(request.text);
@@ -245,4 +246,10 @@ function ReadFollowedGames() {
       FilterStreams();
     }
   })
+}
+
+function ShowFullGameNameOnFollowed() {
+  $(".following-list.online .game > a").each(function() {
+    $(this).attr("title", ($(this).text()));
+  });
 }
