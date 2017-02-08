@@ -27,7 +27,10 @@ $(function () {
   $(".js-offers").remove();
 
   // Make sure stream list can always scroll in order to load more streams
-  $(".filter-dropdown-space").css({"min-height": window.innerHeight + "px" });
+  //$(".filter-dropdown-space").css({"min-height": window.innerHeight + "px" });
+
+  // Add more placeholders to ensure stream list can always scroll
+  AddPlaceholders($(".js-streams > .tower"), 15);
 
   LoadOptions();
   //FilterStreams();
@@ -290,4 +293,10 @@ function SortGamesList() {
 
   $gamesList.detach()
     .appendTo($games);
+}
+
+function AddPlaceholders(element, numToAdd) {
+  for (var i = 0; i < numToAdd; i++) {
+    element.append('<div class="tower_placeholder"></div>');
+  }
 }
