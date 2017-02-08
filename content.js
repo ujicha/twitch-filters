@@ -39,6 +39,7 @@ chrome.runtime.onMessage.addListener(
       LoadOptions();
       FilterStreams();
       ShowFullGameNameOnFollowed();
+      SortGamesList();
     }
     else if (request.message === "console_log") {
       console.log(request.text);
@@ -252,4 +253,41 @@ function ShowFullGameNameOnFollowed() {
   $(".following-list.online .game > a").each(function() {
     $(this).attr("title", ($(this).text()));
   });
+}
+
+function SortGamesList() {
+  var $games = $('.js-games > div'),
+  	$gamesList = $games.children('div');
+
+  $gamesList.sort(function(a,b){
+    try {
+
+      // Check for placeholder items and make sure they stay at the end
+      if ($(a).hasClass("tower_placeholder"))
+        return 1;
+
+      if ($(b).hasClass("tower_placeholder"))
+        return -1;
+
+      // Sort games
+      var aViewers = parseInt($(a).find(".meta .info").text().replace(',', '')),
+    		bViewers = parseInt($(b).find(".meta .info").text().replace(',', ''));
+
+      // Reverse sort
+    	if (aViewers > bViewers) {
+    		return -1;
+    	}
+    	if (aViewers < bViewers) {
+    		return 1;
+    	}
+    }
+    catch (e) {
+      console.log(e);
+    }
+
+  	return 0;
+  });
+
+  $gamesList.detach()
+    .appendTo($games);
 }
