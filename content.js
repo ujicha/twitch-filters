@@ -38,11 +38,14 @@ $(function () {
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if( request.message === "filter_streams" ) {
+    if (request.message === "filter_streams") {
       LoadOptions();
       FilterStreams();
       ShowFullGameNameOnFollowed();
-      SortGamesList();
+    }
+    else if (request.message === "update_followed_games") {
+      GetLongerGamesList(50);
+      //SortGamesList();
     }
     else if (request.message === "console_log") {
       console.log(request.text);
@@ -256,6 +259,59 @@ function ShowFullGameNameOnFollowed() {
   $(".following-list.online .game > a").each(function() {
     $(this).attr("title", ($(this).text()));
   });
+}
+
+function GetLongerGamesList(limit) {
+  if (api_user_name === undefined || api_client_id === undefined)
+    return;
+
+  $.ajax({
+    url: "https://api.twitch.tv/api/users/" + api_user_name + "/follows/games/live?on_site=1&limit=" + limit,
+    headers: {
+      "Client-ID": api_client_id
+    }
+  }).done(function (data) {
+    ReplaceGamesList(data);
+  });
+}
+
+function ReplaceGamesList(data) {
+  var gameItemTemplate = '<div id="{EMBER_ID}" class="js-directory-game ember-view"><div class="game item">\
+    <a title="{GAME_NAME}" href="/directory/game/{GAME_NAME}" data-tt_content_index="2" data-tt_content="followed_game" data-tt_medium="twitch_following" class="game-item clearfix" data-ember-action="" data-ember-action-{EMBER_ID}="{EMBER_ID}">\
+      <div class="aspect aspect--3x4">\
+        <img src="{BOX_ART_URL}" data-placeholder="https://static-cdn.jtvnw.net/ttv-boxart/404_boxart.png" class="aspect__fill">\
+      </div>\
+      <div class="meta">\
+        <p class="title">\
+          {GAME_NAME}\
+        </p>\
+        <p class="info">\
+          {VIEWER_COUNT} viewers\
+          <span style="float: right;">{CHANNEL_COUNT} channels</span>\
+        </p>\
+      </div>\
+    </a>\
+  </div>\
+  </div>';
+
+  var $games = $('.js-games > div'),
+  	$gamesList = $games.children('div');
+
+  $gamesList.detach();
+
+  var emberId = 2000;
+  for (var i = 0; i < data.follows.length; i++) {
+    var dataItem = data.follows[i];
+    var gameItem = gameItemTemplate.replace(new RegExp('{GAME_NAME}', 'g'), dataItem.game.name)
+                                   .replace(new RegExp('{EMBER_ID}', 'g'), emberId)
+                                   .replace(new RegExp('{BOX_ART_URL}', 'g'), dataItem.game.box.large)
+                                   .replace(new RegExp('{VIEWER_COUNT}', 'g'), dataItem.viewers)
+                                   .replace(new RegExp('{CHANNEL_COUNT}', 'g'), dataItem.channels);
+    $games.append(gameItem);
+    emberId++;
+  }
+
+  AddPlaceholders($games, 10);
 }
 
 function SortGamesList() {

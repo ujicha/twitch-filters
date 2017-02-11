@@ -24,6 +24,18 @@ chrome.webRequest.onCompleted.addListener(function(details) {
   ]
 });
 
+// Followed games list
+chrome.webRequest.onCompleted.addListener(function(details) {
+  setTimeout(function() {
+    TriggerFollowedGameUpdate();
+  }, filter_delay);
+},
+{
+  urls: [
+    "https://api.twitch.tv/api/users/*/follows/games/live?on_site=1",
+  ]
+});
+
 // Capture userName and Twitch clientID for API calls
 chrome.webRequest.onSendHeaders.addListener(function(details) {
   for (var i = 0; i < details.requestHeaders.length; ++i) {
@@ -66,6 +78,10 @@ function Log(text) {
 
 function TriggerFilters() {
   SendMessage("filter_streams");
+}
+
+function TriggerFollowedGameUpdate() {
+  SendMessage("update_followed_games");
 }
 
 function SendMessage(name) {
