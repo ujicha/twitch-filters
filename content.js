@@ -92,7 +92,9 @@ function FilterStreams() {
     // Check if blacklisted
     var isBLStream = $.inArray(TrimLower(userName), hidden_streams);
     var isBLGame = $.inArray(TrimLower(gameName), hidden_games);
-    if (!isSpecificGamePage && (isBLStream > -1 || isBLGame > -1)) {
+    // Hide blacklisted streams everywhere and blacklisted games when
+    // not on that game's page
+    if (isBLStream > -1 || (!isSpecificGamePage && isBLGame > -1)) {
       StyleHiddenGame(this);
 
       if (isHLStream == -1) {
@@ -297,8 +299,10 @@ function ReplaceGamesList(data) {
   var $games = $('.js-games > div'),
   	$gamesList = $games.children('div');
 
+  // Remove current list
   $gamesList.detach();
 
+  // Add new list of games
   var emberId = 2000;
   for (var i = 0; i < data.follows.length; i++) {
     var dataItem = data.follows[i];
