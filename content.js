@@ -67,17 +67,18 @@ function SaveAPIInfo(id, name) {
 
 function FilterStreams() {
   ReadFollowedStreams();
+  FixGameImages();
   //console.log("Cleaning results");
 
   var isSpecificGamePage = window.location.href.includes("/directory/game/");
 
   // Iterate over stream items and determine action
-  $(".streams > .infinite-scroll > .ember-view").each(function () {
+  $(".js-streams > .infinite-scroll > .ember-view").each(function () {
     // Get meta data
     var userName = $(this).find("a.js-channel-link").text().trim();
-    var gameName = $(this).find("a.boxart").attr("title");
+    var gameName = $(this).find("a.card__boxpin").attr("title");
     if (gameName === undefined)
-      gameName = $(this).find("a.boxart").attr("original-title");
+      gameName = $(this).find("a.card__boxpin").attr("original-title");
 
     // Check if highlighted
     var isHLStream = $.inArray(userName, followed_streams);
@@ -108,6 +109,20 @@ function FilterStreams() {
 
     $(this).show();
   });
+
+  FixCardMargin();
+}
+
+function FixGameImages() {
+  $("a.card__boxpin").css({
+    "border": "3px solid black"
+  });
+}
+
+function FixCardMargin() {
+  $("p.card__info").css({
+    "margin-bottom": "0"
+  });
 }
 
 function TrimLower(str) {
@@ -133,11 +148,11 @@ function ResetHighlight(e) {
 function HighlightGame(e) {
   StyleMetaSection(e);
 
-  $(e).find(".content").css({
+  $(e).find(".card__layout").css({
     border: "2px solid " + game_highlight_color,
     backgroundColor: game_highlight_color
   });
-  $(e).find(".boxart").css({
+  $(e).find(".card__boxpin").css({
     "border-color": game_highlight_color_transparent
   });
 }
@@ -145,15 +160,15 @@ function HighlightGame(e) {
 function HighlightStream(e) {
   StyleMetaSection(e);
 
-  $(e).find(".content").css({
+  $(e).find(".card__layout").css({
     border: "2px solid " + stream_highlight_color,
     backgroundColor: stream_highlight_color
   });
 }
 
 function StyleMetaSection(e) {
-  $(e).find(".info").attr("style", "color: black !important;");
-  $(e).find(".js-profile-link").attr("style", "font: 16px normal !important;");
+  $(e).find(".card__info").attr("style", "color: black !important;");
+  $(e).find(".js-channel-link").attr("style", "font: 16px normal !important;");
 }
 
 function DimFollowedOnline(e) {
