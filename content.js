@@ -74,6 +74,13 @@ function FilterStreams() {
 
   // Iterate over stream items and determine action
   $(".js-streams > .infinite-scroll > .ember-view").each(function () {
+
+    // Get rid of ads in the results...
+    if ($(this).hasClass("directory-ad")) {
+      $(this).remove();
+      return;
+    }
+
     // Get meta data
     var userName = $(this).find("a.js-channel-link").text().trim();
     var gameName = $(this).find("a.card__boxpin").attr("title");
