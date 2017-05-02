@@ -180,7 +180,7 @@ function StyleMetaSection(e) {
 
 function DimFollowedOnline(e) {
   $(e).css({
-    opacity: 0.4
+    opacity: 0.5
   });
 }
 
@@ -188,6 +188,13 @@ function HighlightFollowedOnline(e) {
   $(e).css({
     backgroundColor: game_highlight_color
   });
+}
+
+function StyleOffline(e) {
+  $(e).css({
+    opacity: 0.5
+  });
+  $(e).find(".card__info").remove();
 }
 
 function LoadOptions() {
@@ -213,7 +220,7 @@ function SplitArrayList(list) {
 }
 
 function GetUser(el) {
-  var user = $(el).find(".js-search-name")[0];
+  var user = $(el).find(".card__title")[0];
   if (user == null)
     return "";
 
@@ -221,7 +228,7 @@ function GetUser(el) {
 }
 
 function GetGame(el) {
-  var game = $(el).find(".js-search-game")[0];
+  var game = $(el).find(".card__info")[0];
   if (game == null)
     return "";
 
@@ -230,7 +237,14 @@ function GetGame(el) {
 
 function ReadFollowedStreams() {
   followed_streams = [];
-  $(".following-list .channel").each(function () {
+  $(".sc-channels__live > .ember-view").each(function () {
+
+    // Remove game from offline channels
+    if ($(this).find(".sc-card--offline-channel").length > 0) {
+      StyleOffline(this);
+      return;
+    }
+
     try {
       var user = GetUser(this);
       followed_streams.push(user);
