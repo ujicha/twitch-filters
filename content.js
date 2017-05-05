@@ -25,6 +25,8 @@ var min_followed_displayed = 10;
 LoadOptions();
 
 $(function () {
+  AddStyles();
+
   $(".js-offers").remove();
 
   // Make sure stream list can always scroll in order to load more streams
@@ -448,4 +450,11 @@ function AddPlaceholders(element, numToAdd) {
   for (var i = 0; i < numToAdd; i++) {
     element.append('<div class="tower_placeholder"></div>');
   }
+}
+
+function AddStyles() {
+  $("<style type='text/css'> \
+      .card__title a:hover, .card__info a:hover { color: white !important; }\
+     </style>")
+    .appendTo("head");
 }
