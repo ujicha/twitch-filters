@@ -20,7 +20,8 @@ chrome.webRequest.onCompleted.addListener(function(details) {
 {
   urls: [
     "https://api.twitch.tv/kraken/streams?limit=*",
-    "https://api.twitch.tv/kraken/streams/followed?stream_type=live*"
+    "https://api.twitch.tv/kraken/streams/followed?stream_type=live*",
+    "https://api.twitch.tv/kraken/streams?channel=*"
   ]
 });
 
