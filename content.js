@@ -20,6 +20,7 @@ var game_highlight_color_transparent = "rgba(100, 65, 164, .7)"; // Twitch purpl
 var hidden_game_color = "rgba(16, 16, 16, 0.5)";
 
 var followed_games_read = false;
+var min_followed_displayed = 10;
 
 LoadOptions();
 
@@ -180,19 +181,22 @@ function StyleMetaSection(e) {
 
 function DimFollowedOnline(e) {
   $(e).css({
-    opacity: 0.5
+    opacity: 0.5,
+    backgroundColor: ''
   });
 }
 
 function HighlightFollowedOnline(e) {
   $(e).css({
+    opacity: '',
     backgroundColor: game_highlight_color
   });
 }
 
 function StyleOffline(e) {
   $(e).css({
-    opacity: 0.5
+    opacity: 0.5,
+    backgroundColor: ''
   });
   $(e).find(".card__info").remove();
 }
@@ -236,6 +240,9 @@ function GetGame(el) {
 }
 
 function ReadFollowedStreams() {
+  ShowMoreFollowedStreams();
+  SortFollowedList();
+
   followed_streams = [];
   $(".sc-channels__live > .ember-view").each(function () {
 
@@ -359,6 +366,7 @@ function SortGamesList() {
   	$gamesList = $games.children('div');
 
   $gamesList.sort(function(a,b){
+    var comparison = 0;
     try {
 
       // Check for placeholder items and make sure they stay at the end
@@ -372,23 +380,68 @@ function SortGamesList() {
       var aViewers = parseInt($(a).find(".meta .info").text().replace(',', '')),
     		bViewers = parseInt($(b).find(".meta .info").text().replace(',', ''));
 
-      // Reverse sort
-    	if (aViewers > bViewers) {
-    		return -1;
-    	}
-    	if (aViewers < bViewers) {
-    		return 1;
-    	}
+      comparison = CompareReverse(aViewers, bViewers);
     }
     catch (e) {
       console.log(e);
     }
 
-  	return 0;
+  	return comparison;
   });
 
   $gamesList.detach()
     .appendTo($games);
+}
+
+function CompareReverse(a, b) {
+  var result = 0;
+
+  if (a > b
+    || (!isNaN(a) && isNaN(b))) {
+    result = -1;
+  }
+  if (a < b
+    || (isNaN(a) && !isNaN(b))) {
+    result = 1;
+  }
+
+  return result;
+}
+
+function ShowMoreFollowedStreams() {
+  // Show more followed streams if too few on screen
+  if ($(".sc-channels__live > .ember-view").length < min_followed_displayed) {
+    $(".sc-channels__live").find(".sc-toggle").click();
+  }
+}
+
+function SortFollowedList() {
+  var $followed = $('.sc-channels__live'),
+  	$followedList = $followed.children('.ember-view'),
+    loadMore = $(".sc-channels__live").find(".sc-toggle");
+
+  $followedList.sort(function(a,b){
+    var comparison = 0;
+    try {
+      // Sort games
+      var aViewers = parseInt($(a).find(".sc-card__viewers").text().replace(',', '')),
+    		bViewers = parseInt($(b).find(".sc-card__viewers").text().replace(',', ''));
+
+      comparison = CompareReverse(aViewers, bViewers);
+    }
+    catch (e) {
+      console.log(e);
+    }
+
+  	return comparison;
+  });
+
+  // Replace list with sorted list
+  $followedList.detach()
+    .appendTo($followed);
+
+  // Add load more to end of list
+  $(loadMore).appendTo($followed);
 }
 
 function AddPlaceholders(element, numToAdd) {
