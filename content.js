@@ -186,6 +186,7 @@ function DimFollowedOnline(e) {
     opacity: 0.5,
     backgroundColor: ''
   });
+  $(e).find(".sc-item__followed-channel--offline .sc-item__metadata").show();
 }
 
 function HighlightFollowedOnline(e) {
@@ -193,6 +194,7 @@ function HighlightFollowedOnline(e) {
     opacity: '',
     backgroundColor: game_highlight_color
   });
+  $(e).find(".sc-item__followed-channel--offline .sc-item__metadata").show();
 }
 
 function StyleOffline(e) {
@@ -200,6 +202,7 @@ function StyleOffline(e) {
     opacity: 0.5,
     backgroundColor: ''
   });
+  $(e).find(".sc-item__followed-channel--offline .sc-item__metadata").hide();
 }
 
 function LoadOptions() {
