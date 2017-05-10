@@ -200,7 +200,6 @@ function StyleOffline(e) {
     opacity: 0.5,
     backgroundColor: ''
   });
-  $(e).find(".card__info").remove();
 }
 
 function LoadOptions() {
@@ -226,7 +225,7 @@ function SplitArrayList(list) {
 }
 
 function GetUser(el) {
-  var user = $(el).find(".card__title")[0];
+  var user = $(el).find(".sc-item__title")[0];
   if (user == null)
     return "";
 
@@ -234,7 +233,7 @@ function GetUser(el) {
 }
 
 function GetGame(el) {
-  var game = $(el).find(".card__info")[0];
+  var game = $(el).find(".sc-item__metadata--1")[0];
   if (game == null)
     return "";
 
@@ -249,7 +248,7 @@ function ReadFollowedStreams() {
   $(".sc-channels__live > .ember-view").each(function () {
 
     // Remove game from offline channels
-    if ($(this).find(".sc-card--offline-channel").length > 0) {
+    if ($(this).find(".sc-item__followed-channel--offline").length > 0) {
       StyleOffline(this);
       return;
     }
@@ -426,8 +425,8 @@ function SortFollowedList() {
     var comparison = 0;
     try {
       // Sort games
-      var aViewers = parseInt($(a).find(".sc-card__viewers").text().replace(',', '')),
-    		bViewers = parseInt($(b).find(".sc-card__viewers").text().replace(',', ''));
+      var aViewers = parseInt($(a).find(".sc-item__metadata--2").text().replace(',', '')),
+    		bViewers = parseInt($(b).find(".sc-item__metadata--2").text().replace(',', ''));
 
       comparison = CompareReverse(aViewers, bViewers);
     }
