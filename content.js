@@ -76,7 +76,7 @@ function FilterStreams() {
   var isSpecificGamePage = window.location.href.includes("/directory/game/");
 
   // Iterate over stream items and determine action
-  $(".js-streams > .infinite-scroll > .ember-view").each(function () {
+  $(".js-streams > .tower > .ember-view").each(function () {
 
     // Get rid of ads in the results...
     if ($(this).hasClass("directory-ad")) {
